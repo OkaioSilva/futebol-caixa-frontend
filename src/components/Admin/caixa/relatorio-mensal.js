@@ -47,13 +47,13 @@ const RelatorioMensal = () => {
         maxWidth: '100vw',
     };
     const ThResponsive = {
-        border: '1px solid #ddd',
-        padding: '8px',
+        border: '0.063rem solid #ddd',
+        padding: '0.5rem',
         fontSize: '1rem',
     };
     const TdResponsive = {
-        border: '1px solid #ddd',
-        padding: '8px',
+        border: '0.063rem solid #ddd',
+        padding: '0.5rem',
         fontSize: '1rem',
         wordBreak: 'break-word',
         maxWidth: 120,
@@ -98,11 +98,11 @@ const RelatorioMensal = () => {
                                             onChange={e => setValorPagamento(Number(e.target.value))}
                                             style={{ width: 80, marginRight: 8 }}
                                         />
-                                        <button onClick={() => confirmarPagamento(item.id)} style={{ background: '#2ecc71', color: '#fff', border: 'none', borderRadius: 4, padding: '6px 14px', fontWeight: 600, marginRight: 8 }}>Confirmar</button>
-                                        <button onClick={() => setPagando(null)} style={{ background: '#bbb', color: '#fff', border: 'none', borderRadius: 4, padding: '6px 14px', fontWeight: 600 }}>Cancelar</button>
+                                        <button onClick={() => confirmarPagamento(item.id)} style={{ background: '#2ecc71', color: '#fff', border: 'none', borderRadius: 4, padding: '0.375rem 0.875rem', fontWeight: 600, marginRight: 8 }}>Confirmar</button>
+                                        <button onClick={() => setPagando(null)} style={{ background: '#bbb', color: '#fff', border: 'none', borderRadius: 4, padding: '0.375rem 0.875rem', fontWeight: 600 }}>Cancelar</button>
                                     </>
                                 ) : (
-                                    <button onClick={() => handlePagar(item.id)} style={{ background: '#2ecc71', color: '#fff', border: 'none', borderRadius: 4, padding: '6px 14px', fontWeight: 600 }}>Registrar Pagamento</button>
+                                    <button onClick={() => handlePagar(item.id)} style={{ background: '#2ecc71', color: '#fff', border: 'none', borderRadius: 4, padding: '0.375rem 0.875rem', fontWeight: 600 }}>Registrar Pagamento</button>
                                 )}
                             </td>
                         </tr>
