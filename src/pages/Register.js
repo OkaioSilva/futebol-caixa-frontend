@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import styled from 'styled-components'
 
@@ -11,18 +11,18 @@ const Container = styled.div`
     min-height: 100vh;
     background: linear-gradient(-45deg,rgb(27, 25, 24), #e73c7e, #23a6d5, #23d5ab);
     background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
-	height: 100vh;
+    animation: gradient 15s ease infinite;
+    height: 100vh;
     @keyframes gradient{
         0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
     }
     padding: 2rem;
 `;
@@ -119,10 +119,19 @@ const RegisterLink = styled.div`
     }
 `;
 
+
 export const Register = () => {
     const [form, setForm] = useState({ nome: '', email: '', senha: '', tokenConvite: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        const token = searchParams.get('token');
+        if (token) {
+            setForm((prev) => ({ ...prev, tokenConvite: token }));
+        }
+    }, [searchParams]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
