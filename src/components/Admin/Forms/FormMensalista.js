@@ -60,13 +60,23 @@ const SubmitButton = styled.button`
   }
 `;
 export const FormMensalista = ({ onSuccess }) => {
-  const [form, setForm] = useState({ nome: ''});
+  const [form, setForm] = useState({ nome: '', dias_jogo: [] });
+
+  const handleCheckbox = (dia) => {
+    setForm((prev) => {
+      let dias = prev.dias_jogo.includes(dia)
+        ? prev.dias_jogo.filter(d => d !== dia)
+        : [...prev.dias_jogo, dia];
+      return { ...prev, dias_jogo: dias };
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let dias_jogo = form.dias_jogo.sort().join(' e ');
     try {
-      await api.post('/admin/mensalistas', form);
-      setForm({ nome: '', });
+      await api.post('/admin/mensalistas', { nome: form.nome, dias_jogo });
+      setForm({ nome: '', dias_jogo: [] });
       onSuccess();
       toast.success('Mensalista cadastrado!');
     } catch (err) {
@@ -75,10 +85,9 @@ export const FormMensalista = ({ onSuccess }) => {
   };
 
   return (
-
     <FormCard>
       <FormTitle>Nome do mensalista</FormTitle>
-      <FormStyle onSubmit={handleSubmit}>
+      <FormStyle onSubmit={handleSubmit} style={{gridTemplateColumns: '1fr', maxWidth: 400, margin: '0 auto'}}>
         <Input
           type="text"
           placeholder="Nome completo"
@@ -86,9 +95,23 @@ export const FormMensalista = ({ onSuccess }) => {
           onChange={(e) => setForm({...form, nome: e.target.value})}
           required
         />
-        
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <label style={{ fontSize: '1rem' }}>
+            <input
+              type="checkbox"
+              checked={form.dias_jogo.includes('segunda')}
+              onChange={() => handleCheckbox('segunda')}
+            /> Segunda
+          </label>
+          <label style={{ fontSize: '1rem' }}>
+            <input
+              type="checkbox"
+              checked={form.dias_jogo.includes('quarta')}
+              onChange={() => handleCheckbox('quarta')}
+            /> Quarta
+          </label>
+        </div>
         <SubmitButton type="submit">Salvar</SubmitButton>
-
       </FormStyle>
     </FormCard>
   );
