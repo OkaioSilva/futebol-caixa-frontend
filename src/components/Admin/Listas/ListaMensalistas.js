@@ -143,14 +143,14 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
             <tr key={m.id}>
               <Td>{m.nome}</Td>
               <Td className={`status-${m.status}`}>{m.status.toUpperCase()}</Td>
-              <Td style={{ color: m.is_dp ? '#c0392b' : '#2ecc71', fontWeight: 600 }}>
-                {m.is_dp ? 'DP (Isento)' : 'Ativo'}
+              <Td style={{ color: m.is_dp || m.is_goleiro ? '#c0392b' : '#2ecc71', fontWeight: 600 }}>
+                {m.is_dp ? 'DP (Isento)' : m.is_goleiro ? 'Goleiro (Isento)' : 'Ativo'}
               </Td>
               <Td>
                 <select
                   value={m.status}
                   onChange={(e) => atualizarStatus(m.id, e.target.value)}
-                  disabled={m.is_dp}
+                  disabled={m.is_dp || m.is_goleiro}
                 >
                   <option value="pago">Pago</option>
                   <option value="pendente">Pendente</option>

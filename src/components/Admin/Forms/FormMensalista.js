@@ -60,7 +60,7 @@ const SubmitButton = styled.button`
   }
 `;
 export const FormMensalista = ({ onSuccess }) => {
-  const [form, setForm] = useState({ nome: '', dias_jogo: [], is_dp: false });
+  const [form, setForm] = useState({ nome: '', dias_jogo: [], is_dp: false, is_goleiro: false });
 
   const handleCheckbox = (dia) => {
     setForm((prev) => {
@@ -74,13 +74,16 @@ export const FormMensalista = ({ onSuccess }) => {
   const handleDP = () => {
     setForm((prev) => ({ ...prev, is_dp: !prev.is_dp }));
   };
+  const handleGoleiro = () => {
+    setForm((prev) => ({ ...prev, is_goleiro: !prev.is_goleiro }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     let dias_jogo = form.dias_jogo.sort().join(' e ');
     try {
-      await api.post('/admin/mensalistas', { nome: form.nome, dias_jogo, is_dp: form.is_dp });
-      setForm({ nome: '', dias_jogo: [], is_dp: false });
+      await api.post('/admin/mensalistas', { nome: form.nome, dias_jogo, is_dp: form.is_dp, is_goleiro: form.is_goleiro });
+      setForm({ nome: '', dias_jogo: [], is_dp: false, is_goleiro: false });
       onSuccess();
       toast.success('Mensalista cadastrado!');
     } catch (err) {
@@ -115,7 +118,7 @@ export const FormMensalista = ({ onSuccess }) => {
             /> Quarta
           </label>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '10px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '10px 0', gap: 18 }}>
           <label style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 6 }}>
             <input
               type="checkbox"
@@ -123,6 +126,14 @@ export const FormMensalista = ({ onSuccess }) => {
               onChange={handleDP}
             />
             Departamento Médico (Isento)
+          </label>
+          <label style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <input
+              type="checkbox"
+              checked={form.is_goleiro}
+              onChange={handleGoleiro}
+            />
+            Goleiro (Isento)
           </label>
         </div>
         <SubmitButton type="submit">Salvar</SubmitButton>

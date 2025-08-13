@@ -228,9 +228,10 @@ export const Admin = () => {
   }, [carregarDados, navigate]);
   
 
-  // Separar mensalistas DP e ativos
+  // Separar mensalistas DP, goleiros e ativos
   const dpMensalistas = mensalistas.filter(m => m.is_dp);
-  const ativosMensalistas = mensalistas.filter(m => !m.is_dp);
+  const goleirosMensalistas = mensalistas.filter(m => m.is_goleiro);
+  const ativosMensalistas = mensalistas.filter(m => !m.is_dp && !m.is_goleiro);
 
   return (
     <AdminContainer>
@@ -264,6 +265,13 @@ export const Admin = () => {
             <div style={{ background: '#ffeaea', border: '2px solid #c0392b', borderRadius: 8, padding: 16, marginBottom: 18 }}>
               <h3 style={{ color: '#c0392b', textAlign: 'center', margin: 0, marginBottom: 8 }}>Departamento Médico (Isentos)</h3>
               <ListaMensalistas mensalistas={dpMensalistas} onUpdateStatus={carregarDados} />
+            </div>
+          )}
+          {/* Área de Goleiros */}
+          {goleirosMensalistas.length > 0 && (
+            <div style={{ background: '#eafff0', border: '2px solid #27ae60', borderRadius: 8, padding: 16, marginBottom: 18 }}>
+              <h3 style={{ color: '#27ae60', textAlign: 'center', margin: 0, marginBottom: 8 }}>Goleiros (Isentos)</h3>
+              <ListaMensalistas mensalistas={goleirosMensalistas} onUpdateStatus={carregarDados} />
             </div>
           )}
           {/* Mensalistas ativos */}
