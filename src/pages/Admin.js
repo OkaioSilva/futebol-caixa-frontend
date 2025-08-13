@@ -228,6 +228,10 @@ export const Admin = () => {
   }, [carregarDados, navigate]);
   
 
+  // Separar mensalistas DP e ativos
+  const dpMensalistas = mensalistas.filter(m => m.is_dp);
+  const ativosMensalistas = mensalistas.filter(m => !m.is_dp);
+
   return (
     <AdminContainer>
       <AdminHeader>
@@ -255,8 +259,16 @@ export const Admin = () => {
           <ResumoCaixa entradas={caixa.entradas} saidas={caixa.saidas} />
           <MovimentacoesCaixa movimentacoes={movimentacoes} />
           <ListaVisitantes visitantes={visitantes} />
+          {/* Área de DP */}
+          {dpMensalistas.length > 0 && (
+            <div style={{ background: '#ffeaea', border: '2px solid #c0392b', borderRadius: 8, padding: 16, marginBottom: 18 }}>
+              <h3 style={{ color: '#c0392b', textAlign: 'center', margin: 0, marginBottom: 8 }}>Departamento Médico (Isentos)</h3>
+              <ListaMensalistas mensalistas={dpMensalistas} onUpdateStatus={carregarDados} />
+            </div>
+          )}
+          {/* Mensalistas ativos */}
           <ListaMensalistas
-            mensalistas={mensalistas}
+            mensalistas={ativosMensalistas}
             onUpdateStatus={carregarDados}
           />
         </ListsSection>
