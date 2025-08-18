@@ -144,7 +144,7 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
               <Td>{m.nome}</Td>
               <Td className={`status-${m.status}`}>{m.status.toUpperCase()}</Td>
               <Td style={{ color: m.is_dp || m.is_goleiro ? '#c0392b' : '#2ecc71', fontWeight: 600 }}>
-                {m.is_dp ? 'DP (Isento)' : m.is_goleiro ? 'Goleiro (Isento)' : 'Ativo'}
+                {m.is_dp ? 'DM (Isento)' : m.is_goleiro ? 'Goleiro (Isento)' : 'Ativo'}
               </Td>
               <Td>
                 <select
