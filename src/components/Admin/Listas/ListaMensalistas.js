@@ -133,7 +133,7 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
           <tr>
             <Th>Nome</Th>
             <Th>Status</Th>
-            <Th>Isenção/DP</Th>
+            <Th>Isenção/DM</Th>
             <Th></Th>
             {/* <Th>Situação</Th> */}
           </tr>
