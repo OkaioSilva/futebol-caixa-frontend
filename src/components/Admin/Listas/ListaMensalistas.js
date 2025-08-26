@@ -96,9 +96,9 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
   const atualizarStatus = async (id, novoStatus) => {
     try {
       let body = { status: novoStatus };
-      // Se for marcar como pago e o mensalista joga nos dois dias, exige seleção do dia
+      // Se for marcar como pago, exige seleção do dia
       const mensalista = mensalistas.find(m => m.id === id);
-      if (novoStatus === 'pago' && mensalista && mensalista.dias_jogo && mensalista.dias_jogo.includes('e')) {
+      if (novoStatus === 'pago') {
         if (!diaPagamento[id]) {
           toast.warn('Selecione o dia do futebol!');
           return;
@@ -160,8 +160,7 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
                 <select
                   value={m.status}
                   onChange={e => {
-                    if (e.target.value === 'pago' && m.dias_jogo && m.dias_jogo.includes('e')) {
-                      // Só permite marcar como pago se o dia estiver selecionado
+                    if (e.target.value === 'pago') {
                       if (!diaPagamento[m.id]) {
                         toast.warn('Selecione o dia do futebol!');
                         return;
@@ -175,8 +174,8 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
                   <option value="pendente">Pendente</option>
                   <option value="atrasado">Atrasado</option>
                 </select>
-                {/* Se for marcar como pago e joga nos dois dias, mostrar select do dia */}
-                {m.status !== 'pago' && m.dias_jogo && m.dias_jogo.includes('e') && (
+                {/* Sempre mostrar select do dia para marcar como pago */}
+                {m.status !== 'pago' && (
                   <select
                     value={diaPagamento[m.id] || ''}
                     onChange={e => setDiaPagamento(prev => ({ ...prev, [m.id]: e.target.value }))}
