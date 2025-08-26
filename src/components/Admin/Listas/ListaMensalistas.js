@@ -158,7 +158,7 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
           <tr>
             <Th>Nome</Th>
             <Th>Status</Th>
-            <Th>Situação</Th>
+            <Th>Situaçãoo</Th>
             <Th></Th>
             {/* <Th>Situação</Th> */}
           </tr>
