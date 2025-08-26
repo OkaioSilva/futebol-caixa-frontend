@@ -92,7 +92,11 @@ export const ListaVisitantes = ({ visitantes, onUpdateStatus }) => {
       if (onUpdateStatus) onUpdateStatus();
       toast.success('Pagamento registrado!');
     } catch (err) {
-      toast.error('Erro ao registrar pagamento');
+      if (err.response && err.response.status === 404) {
+        toast.error('Rota de pagamento de visitante não encontrada no backend.');
+      } else {
+        toast.error('Erro ao registrar pagamento');
+      }
     }
   };
 

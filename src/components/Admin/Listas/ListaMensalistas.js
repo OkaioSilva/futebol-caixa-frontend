@@ -96,7 +96,13 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
   const atualizarStatus = async (id, novoStatus) => {
     try {
       let body = { status: novoStatus };
-      if (novoStatus === 'pago' && diaPagamento[id]) {
+      // Se for marcar como pago e o mensalista joga nos dois dias, exige seleção do dia
+      const mensalista = mensalistas.find(m => m.id === id);
+      if (novoStatus === 'pago' && mensalista && mensalista.dias_jogo && mensalista.dias_jogo.includes('e')) {
+        if (!diaPagamento[id]) {
+          toast.warn('Selecione o dia do futebol!');
+          return;
+        }
         body.dia_jogo = diaPagamento[id];
       }
       await api.put(`/admin/mensalistas/${id}/pagamento`, body);
@@ -155,8 +161,11 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
                   value={m.status}
                   onChange={e => {
                     if (e.target.value === 'pago' && m.dias_jogo && m.dias_jogo.includes('e')) {
-                      // Exige seleção do dia
-                      setDiaPagamento((prev) => ({ ...prev, [m.id]: '' }));
+                      // Só permite marcar como pago se o dia estiver selecionado
+                      if (!diaPagamento[m.id]) {
+                        toast.warn('Selecione o dia do futebol!');
+                        return;
+                      }
                     }
                     atualizarStatus(m.id, e.target.value);
                   }}
