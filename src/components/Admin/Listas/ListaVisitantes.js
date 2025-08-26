@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import api from '../../../services/api';
+import { toast } from 'react-toastify';
 
 import styled from 'styled-components';
 
@@ -69,16 +71,33 @@ const Linha = styled.tr`
   }
 `;
 
-export const ListaVisitantes = ({ visitantes }) => {
-    const [pagina, setPagina] = useState(1);
-    const porPagina = 8;
-    const totalPaginas = Math.ceil((visitantes?.length || 0) / porPagina);
-    const paginados = Array.isArray(visitantes)
-        ? visitantes.slice((pagina - 1) * porPagina, pagina * porPagina)
-        : [];
+export const ListaVisitantes = ({ visitantes, onUpdateStatus }) => {
+  const [pagina, setPagina] = useState(1);
+  const porPagina = 8;
+  const totalPaginas = Math.ceil((visitantes?.length || 0) / porPagina);
+  const paginados = Array.isArray(visitantes)
+    ? visitantes.slice((pagina - 1) * porPagina, pagina * porPagina)
+    : [];
+  const [diaPagamento, setDiaPagamento] = useState({});
 
-    return (
-        <div style={{
+  const pagarVisitante = async (id) => {
+    const dia = diaPagamento[id];
+    if (!dia) {
+      toast.warn('Selecione o dia do futebol!');
+      return;
+    }
+    try {
+      await api.put(`/admin/visitantes/${id}/pagamento`, { status: 'pago', dia_jogo: dia });
+      setDiaPagamento((prev) => ({ ...prev, [id]: '' }));
+      if (onUpdateStatus) onUpdateStatus();
+      toast.success('Pagamento registrado!');
+    } catch (err) {
+      toast.error('Erro ao registrar pagamento');
+    }
+  };
+
+  return (
+    <div style={{
             boxShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
             borderRadius: '8px',
             padding: '20px',
@@ -95,15 +114,32 @@ export const ListaVisitantes = ({ visitantes }) => {
                         <Cabecalho>Data da visita</Cabecalho>
                     </tr>
                 </thead>
-                <tbody>
-                    {paginados.map((v) => (
-                        <Linha key={v.id}>
-                            <Celula data-label="Nome">{v.nome}</Celula>
-                            <Celula data-label="Valor Pago (R$)">{parseFloat(v.valor_pago).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Celula>
-                            <Celula data-label="Data da visita">{new Date(v.data_visita).toLocaleDateString('Pt-Br')}</Celula>
-                        </Linha>
-                    ))}
-                </tbody>
+        <tbody>
+          {paginados.map((v) => (
+            <Linha key={v.id}>
+              <Celula data-label="Nome">{v.nome}</Celula>
+              <Celula data-label="Valor Pago (R$)">{parseFloat(v.valor_pago).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Celula>
+              <Celula data-label="Data da visita">{new Date(v.data_visita).toLocaleDateString('Pt-Br')}</Celula>
+              <Celula>
+                <select
+                  value={diaPagamento[v.id] || ''}
+                  onChange={e => setDiaPagamento(prev => ({ ...prev, [v.id]: e.target.value }))}
+                  style={{ marginRight: 8 }}
+                >
+                  <option value="">Dia do futebol</option>
+                  <option value="segunda">Segunda</option>
+                  <option value="quarta">Quarta</option>
+                </select>
+                <button
+                  style={{ padding: '6px 12px', borderRadius: 4, border: 'none', background: '#2ecc71', color: '#fff', fontWeight: 600, cursor: 'pointer' }}
+                  onClick={() => pagarVisitante(v.id)}
+                >
+                  Marcar como Pago
+                </button>
+              </Celula>
+            </Linha>
+          ))}
+        </tbody>
             </Tabela>
             {totalPaginas > 1 && (
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 12 }}>

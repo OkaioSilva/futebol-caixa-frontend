@@ -61,16 +61,17 @@ const SubmitButton = styled.button`
 `;
 
 export const FormVisitante = ({ onSuccess }) => {
-  const [form, setForm] = useState({ nome: '', valor_pago: '' });
+  const [form, setForm] = useState({ nome: '', valor_pago: '', dia_jogo: '' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await api.post('/admin/visitantes', {
         ...form,
-        valor_pago: parseFloat(form.valor_pago)
+        valor_pago: parseFloat(form.valor_pago),
+        dia_jogo: form.dia_jogo || null
       });
-      setForm({ nome: '', valor_pago: '' });
+      setForm({ nome: '', valor_pago: '', dia_jogo: '' });
       onSuccess();
       toast.success('Visitante registrado!');
     } catch (err) {
@@ -99,6 +100,15 @@ export const FormVisitante = ({ onSuccess }) => {
           required
         />
         
+        <select
+          value={form.dia_jogo}
+          onChange={e => setForm({...form, dia_jogo: e.target.value})}
+          style={{marginBottom: 8, padding: 10, borderRadius: 4, border: '1px solid #ddd'}}
+        >
+          <option value="">Dia do jogo (opcional)</option>
+          <option value="segunda">Segunda</option>
+          <option value="quarta">Quarta</option>
+        </select>
         <SubmitButton type="submit">Registrar</SubmitButton>
 
       </FormStyle>

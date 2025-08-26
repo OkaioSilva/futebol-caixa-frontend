@@ -92,11 +92,15 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
     ? mensalistas.slice((pagina - 1) * porPagina, pagina * porPagina)
     : [];
 
+  const [diaPagamento, setDiaPagamento] = useState({});
   const atualizarStatus = async (id, novoStatus) => {
     try {
-      await api.put(`/admin/mensalistas/${id}/pagamento`, {
-        status: novoStatus
-      });
+      let body = { status: novoStatus };
+      if (novoStatus === 'pago' && diaPagamento[id]) {
+        body.dia_jogo = diaPagamento[id];
+      }
+      await api.put(`/admin/mensalistas/${id}/pagamento`, body);
+      setDiaPagamento((prev) => ({ ...prev, [id]: '' }));
       onUpdateStatus();
     } catch (err) {
       toast.error('Erro ao atualizar: ' + err.response?.data?.error);
@@ -149,13 +153,31 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
               <Td>
                 <select
                   value={m.status}
-                  onChange={(e) => atualizarStatus(m.id, e.target.value)}
+                  onChange={e => {
+                    if (e.target.value === 'pago' && m.dias_jogo && m.dias_jogo.includes('e')) {
+                      // Exige seleção do dia
+                      setDiaPagamento((prev) => ({ ...prev, [m.id]: '' }));
+                    }
+                    atualizarStatus(m.id, e.target.value);
+                  }}
                   disabled={m.is_dp || m.is_goleiro}
                 >
                   <option value="pago">Pago</option>
                   <option value="pendente">Pendente</option>
                   <option value="atrasado">Atrasado</option>
                 </select>
+                {/* Se for marcar como pago e joga nos dois dias, mostrar select do dia */}
+                {m.status !== 'pago' && m.dias_jogo && m.dias_jogo.includes('e') && (
+                  <select
+                    value={diaPagamento[m.id] || ''}
+                    onChange={e => setDiaPagamento(prev => ({ ...prev, [m.id]: e.target.value }))}
+                    style={{ marginLeft: 8 }}
+                  >
+                    <option value="">Selecione o dia</option>
+                    <option value="segunda">Segunda</option>
+                    <option value="quarta">Quarta</option>
+                  </select>
+                )}
                 <ActionButton $isdelete={m.id.toString()} onClick={() => handleDelete(m.id)}>
                   Excluir
                 </ActionButton>
