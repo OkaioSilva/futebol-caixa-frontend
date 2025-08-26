@@ -72,7 +72,8 @@ export const FormMovimentacao = ({ onSuccess }) => {
   const [form, setForm] = useState({ 
     tipo: 'entrada', 
     valor: '', 
-    descricao: '' 
+    descricao: '',
+    dia_jogo: ''
   });
 
   const handleSubmit = async (e) => {
@@ -80,9 +81,10 @@ export const FormMovimentacao = ({ onSuccess }) => {
     try {
       await api.post('/admin/caixa', {
         ...form,
-        valor: parseFloat(form.valor)
+        valor: parseFloat(form.valor),
+        dia_jogo: form.dia_jogo || null
       });
-      setForm({ tipo: 'entrada', valor: '', descricao: '' });
+      setForm({ tipo: 'entrada', valor: '', descricao: '', dia_jogo: '' });
       onSuccess();
       toast.success('Movimentação registrada!');
     } catch (err) {
@@ -112,6 +114,15 @@ export const FormMovimentacao = ({ onSuccess }) => {
           onChange={(e) => setForm({...form, valor: e.target.value})}
           required
         />
+        <Select
+          value={form.dia_jogo}
+          onChange={e => setForm({...form, dia_jogo: e.target.value})}
+          style={{marginBottom: 8}}
+        >
+          <option value="">Dia do jogo (opcional)</option>
+          <option value="segunda">Segunda</option>
+          <option value="quarta">Quarta</option>
+        </Select>
         <Input
           type="text"
           placeholder="Descrição"

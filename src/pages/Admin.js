@@ -257,7 +257,7 @@ export const Admin = () => {
 
         {/* Listas */}
         <ListsSection>
-          <ResumoCaixa entradas={caixa.entradas} saidas={caixa.saidas} />
+          <ResumoCaixa entradas_segunda={caixa.entradas_segunda} entradas_quarta={caixa.entradas_quarta} saidas={caixa.saidas} />
           <MovimentacoesCaixa movimentacoes={movimentacoes} />
           <ListaVisitantes visitantes={visitantes} />
           {/* Área de DP */}

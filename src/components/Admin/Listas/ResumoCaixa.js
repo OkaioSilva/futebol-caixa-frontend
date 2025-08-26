@@ -65,19 +65,25 @@ const ResumoItem = styled.div`
   }
 `;
 
-export const ResumoCaixa = ({ entradas, saidas }) => {
+export const ResumoCaixa = ({ entradas_segunda, entradas_quarta, saidas }) => {
   // Converter para número e tratar valores inválidos
-  const numEntradas = Number(entradas) || 0;
+  const numSegunda = Number(entradas_segunda) || 0;
+  const numQuarta = Number(entradas_quarta) || 0;
   const numSaidas = Number(saidas) || 0;
-  const saldo = numEntradas - numSaidas;
+  const totalEntradas = numSegunda + numQuarta;
+  const saldo = totalEntradas - numSaidas;
 
   return (
     <ResumoCard>
       <h3 style={{textAlign: 'center'}}>Resumo Financeiro</h3>
-      <ResumoGrid>
+      <ResumoGrid style={{gridTemplateColumns: 'repeat(4, 1fr)'}}>
         <ResumoItem className="entrada">
-          <span>Entradas</span>
-          <strong>R$ {numEntradas.toFixed(2)}</strong>
+          <span>Entradas Segunda</span>
+          <strong>R$ {numSegunda.toFixed(2)}</strong>
+        </ResumoItem>
+        <ResumoItem className="entrada">
+          <span>Entradas Quarta</span>
+          <strong>R$ {numQuarta.toFixed(2)}</strong>
         </ResumoItem>
         <ResumoItem className="saida">
           <span>Saídas</span>
@@ -88,6 +94,9 @@ export const ResumoCaixa = ({ entradas, saidas }) => {
           <strong>R$ {saldo.toFixed(2)}</strong>
         </ResumoItem>
       </ResumoGrid>
+      <div style={{marginTop: 10, textAlign: 'center', fontSize: '0.95em', color: '#555'}}>
+        <b>Total de entradas:</b> R$ {totalEntradas.toFixed(2)}
+      </div>
     </ResumoCard>
   );
 };
