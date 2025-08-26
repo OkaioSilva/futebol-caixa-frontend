@@ -158,7 +158,7 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
           <tr>
             <Th>Nome</Th>
             <Th>Status</Th>
-            <Th>Isenção/DM</Th>
+            <Th>Situação</Th>
             <Th></Th>
             {/* <Th>Situação</Th> */}
           </tr>
@@ -173,38 +173,7 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
               </Td>
               <Td>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                  <select
-                    value={m.status}
-                    onChange={e => {
-                      if (e.target.value === 'pago') {
-                        if (!diaPagamento[m.id]) {
-                          toast.warn('Selecione o dia do futebol!');
-                          return;
-                        }
-                      }
-                      atualizarStatus(m.id, e.target.value);
-                    }}
-                    disabled={m.is_goleiro}
-                    style={{ minWidth: 90 }}
-                  >
-                    <option value="pago">Pago</option>
-                    <option value="pendente">Pendente</option>
-                    <option value="atrasado">Atrasado</option>
-                  </select>
-                  {/* Sempre mostrar select do dia para marcar como pago */}
-                  {m.status !== 'pago' && (
-                    <select
-                      value={diaPagamento[m.id] || ''}
-                      onChange={e => setDiaPagamento(prev => ({ ...prev, [m.id]: e.target.value }))}
-                      style={{ minWidth: 120 }}
-                    >
-                      <option value="">Selecione o dia</option>
-                      <option value="segunda">Segunda</option>
-                      <option value="quarta">Quarta</option>
-                    </select>
-                  )}
-                  {/* Botão "Melhorou" para DM */}
-                  {m.is_dp && (
+                  {m.is_dp ? (
                     <button
                       style={{ padding: '6px 12px', borderRadius: 4, border: 'none', background: '#27ae60', color: '#fff', fontWeight: 600, cursor: loadingMelhorou[m.id] ? 'not-allowed' : 'pointer' }}
                       onClick={() => marcarMelhorou(m.id)}
@@ -212,6 +181,39 @@ export const ListaMensalistas = ({ mensalistas, onUpdateStatus }) => {
                     >
                       Melhorou
                     </button>
+                  ) : m.is_goleiro ? (
+                    <span style={{ color: '#2980b9', fontWeight: 600 }}>Goleiro</span>
+                  ) : (
+                    <>
+                      <select
+                        value={m.status}
+                        onChange={e => {
+                          if (e.target.value === 'pago') {
+                            if (!diaPagamento[m.id]) {
+                              toast.warn('Selecione o dia do futebol!');
+                              return;
+                            }
+                          }
+                          atualizarStatus(m.id, e.target.value);
+                        }}
+                        style={{ minWidth: 90 }}
+                      >
+                        <option value="pago">Pago</option>
+                        <option value="pendente">Pendente</option>
+                        <option value="atrasado">Atrasado</option>
+                      </select>
+                      {m.status !== 'pago' && (
+                        <select
+                          value={diaPagamento[m.id] || ''}
+                          onChange={e => setDiaPagamento(prev => ({ ...prev, [m.id]: e.target.value }))}
+                          style={{ minWidth: 120 }}
+                        >
+                          <option value="">Selecione o dia</option>
+                          <option value="segunda">Segunda</option>
+                          <option value="quarta">Quarta</option>
+                        </select>
+                      )}
+                    </>
                   )}
                 </div>
                 <ActionButton $isdelete={m.id.toString()} onClick={() => handleDelete(m.id)}>
